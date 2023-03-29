@@ -1,3 +1,17 @@
+
+Chalcogenide growth modelling
+============================
+
+![Reactions](https://user-images.githubusercontent.com/25340554/228510930-f5993dfe-71e3-4050-809c-72b789a363aa.png)
+
+
+
+BaZrS3 thermodynamic modelling
+============================
+
+
+
+
 CZTS thermodynamic modelling
 ============================
 
