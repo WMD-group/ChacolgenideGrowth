@@ -17,7 +17,7 @@
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.      #
 ################################################################################
 
-from materials import CZTS, Cu, Zn, Sn, alpha_S, Cu2S_low as Cu2S, SnS2, ZnS_zincblende as ZnS, SnS_pcma as SnS
+from scripts.materials import CZTS, Cu, Zn, Sn, alpha_S, Cu2S_low as Cu2S, SnS2, ZnS_zincblende as ZnS, SnS_pcma as SnS
 
 T = 298.15  # K
 P = 1E5     # Pa
