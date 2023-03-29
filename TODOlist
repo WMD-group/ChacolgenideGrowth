@@ -1,0 +1,14 @@
+define solution 
+utils
+wrapper
+#redefine plots
+#cmap give a choice
+
+#can use pymatgen to create
+CZTS_kesterite = solid(name='Kesterite CZTS',
+                        pbesol_energy_eV=-0.706480597450521e06,
+                        fu_cell=2, #formula_unit in calculation cell
+                        volume=310.86645888987351,
+                        phonons='phonopy_output/czts-conventional.dat', #same name as file_out in the phonopy_output folder
+                        N=8 #number of atoms per formula_unit
+                       )

@@ -347,6 +347,139 @@ class ideal_gas(material):
         """
         return self.mu_J(T,P) * 0.001
 
+class infinite_solution(material):
+    """
+    Class for ideal gas properties. 
+
+    Sets properties:
+    -------------------
+    ideal_gas.name             (string)
+    ideal_gas.stoichiometry    (Dict relating element to number of atoms in a single formula unit)
+    ideal_gas.pbesol_energy_eV (DFT total energy in eV with PBEsol XC functional)
+    ideal_gas.thermo_data      (String containing path to aims.vibrations output data file)
+    ideal_gas.N                (Number of atoms per formula unit)
+
+    Sets methods:
+    -------------------
+    ideal_gas.U_eV(T), ideal_gas.U_J(T), ideal_gas.U_kJ(T) : Internal energy 
+    ideal_gas.H_eV(T), ideal_gas.H_J(T), ideal_gas.H_kJ(T) : Enthalpy H = U + PV
+    ideal_gas.mu_eV(T,P), ideal_gas.mu_J(T,P), ideal_gas.mu_kJ(T,P) : Chemical potential mu = U + PV - TS
+
+    Ideal gas law PV=nRT is applied: specifically (dH/dP) at const. T = 0 and int(mu)^P2_P1 dP = kTln(P2/P1)
+    Enthalpy has no P dependence as volume is not restricted / expansion step is defined as isothermal
+    """
+
+    def __init__(self,name,stoichiometry,pbesol_energy_eV,thermo_file,zpe_pbesol=0,zpe_lit=0,N=1):
+        material.__init__(self, name, stoichiometry, pbesol_energy_eV,N)
+        self.thermo_file = materials_directory + thermo_file
+        # Initialise ZPE to PBEsol value if provided. 
+        # This looks redundant at the moment: the intent is to implement
+        # some kind of switch or heirarchy of methods further down the line.
+        if zpe_pbesol > 0:
+            self.zpe = zpe_pbesol
+        elif zpe_lit > 0:
+            self.zpe = zpe_lit
+        else:
+            self.zpe = 0
+
+    def U_eV(self,T):
+        """Internal energy of one formula unit of ideal gas, expressed in eV.
+        U = ideal_gas.U_eV(T)
+        Returns a matrix with the same dimensions as T
+        """
+        U_func = get_potential_nist_table(self.thermo_file,'U')
+        return (self.pbesol_energy_eV + self.zpe +
+                U_func(T)*constants.physical_constants['joule-electron volt relationship'][0]/constants.N_A
+                )
+    def U_J(self,T):
+        """Internal energy of one gram-mole of ideal gas, expressed in J/mol
+        U = ideal_gas.U_J(T)
+        Returns a matrix with the same dimensions as T
+        """
+        return self.U_eV(T) * constants.physical_constants['electron volt-joule relationship'][0] * constants.N_A
+
+    def U_kJ(self,T):
+        """Internal energy of one gram-mole of ideal gas, expressed in kJ/mol
+        U = ideal_gas.U_kJ(T)
+        Returns a matrix with the same dimensions as T
+        """
+        return self.U_J(T) * 0.001
+
+    def H_eV(self,T,*P):
+        """Enthalpy of one formula unit of ideal gas, expressed in eV
+        H = ideal_gas.H_eV(T)
+        Returns an array with the same dimensions as T
+
+        Accepts ideal_gas.H_eV(T,P): P is unused
+        """
+        H_func = get_potential_nist_table(self.thermo_file,'H')
+        return (self.pbesol_energy_eV + self.zpe +
+                H_func(T)*constants.physical_constants['joule-electron volt relationship'][0]/constants.N_A
+                )
+
+    def H_J(self,T,*P):
+        """Enthalpy of one gram-mole of ideal gas, expressed in J/mol
+        H = ideal_gas.H_J(T)
+        Returns an array with the same dimensions as T
+
+        Accepts ideal_gas.H_eV(T,P): P is unused
+        """
+        return self.H_eV(T) * constants.physical_constants['electron volt-joule relationship'][0] * constants.N_A
+    
+    def H_kJ(self,T,*P):
+        """Enthalpy of one gram-mole of ideal gas, expressed in kJ/mol
+        H = ideal_gas.H_kJ(T,P)
+        Returns an array with the same dimensions as T
+
+        Accepts ideal_gas.H_eV(T,P): P is unused
+        """
+        return self.H_J(T) * 0.001
+
+    def mu_eV(self,T,P):
+        """
+        Free energy of one formula unit of ideal gas, expressed in eV
+        mu = ideal_gas.mu_eV(T,P)
+        T, P may be orthogonal 2D arrays of length m and n, populated in one row/column:
+        in this case H is an m x n matrix.
+
+        T, P may instead be equal-length non-orthogonal 1D arrays, in which case H is a vector
+        of H values corresponding to T,P pairs.
+
+        Other T, P arrays may result in undefined behaviour.
+        """
+        S_func = get_potential_nist_table(self.thermo_file,'S')
+        S = S_func(T) * constants.physical_constants['joule-electron volt relationship'][0]/constants.N_A
+        H = self.H_eV(T)
+        return H - T*S + constants.physical_constants['Boltzmann constant in eV/K'][0] * T * np.log(P/1E5)
+
+    def mu_J(self,T,P):
+        """
+        Free energy of one mol of ideal gas, expressed in J/mol
+        mu = ideal_gas.mu_J(T,P)
+        T, P may be orthogonal 2D arrays of length m and n, populated in one row/column:
+        in this case H is an m x n matrix.
+
+        T, P may instead be equal-length non-orthogonal 1D arrays, in which case H is a vector
+        of H values corresponding to T,P pairs.
+
+        Other T, P arrays may result in undefined behaviour.
+        """
+        return self.mu_eV(T,P) * constants.physical_constants['electron volt-joule relationship'][0] * constants.N_A
+
+    def mu_kJ(self,T,P):
+        """
+        Free energy of one mol of ideal gas, expressed in kJ/mol
+        mu = ideal_gas.mu_kJ(T,P)
+        T, P may be orthogonal 2D arrays of length m and n, populated in one row/column:
+        in this case H is an m x n matrix.
+
+        T, P may instead be equal-length non-orthogonal 1D arrays, in which case H is a vector
+        of H values corresponding to T,P pairs.
+
+        Other T, P arrays may result in undefined behaviour.
+        """
+        return self.mu_J(T,P) * 0.001
+
 class sulfur_model_legacy(object):
     """
     Class for calculated sulfur equilibria.
@@ -507,6 +640,8 @@ class sulfur_model(object):
     #     else:
     #         self.zpe = 0
 
+
+'''
 
 
 ################ Quaternary compounds ###############
@@ -729,6 +864,7 @@ ZnO=solid(
     phonons='phonopy_output/ZnO.dat',
     N=2
     )
+'''
 
 S8=ideal_gas(
     name='S8',
@@ -777,6 +913,7 @@ H2S=ideal_gas(
     N=3
 )
 
+
 S_model_legacy = sulfur_model_legacy('S vapours',-0.868936310037924e05,'sulfur/mu_pbe0_scaled.csv',
                        -10879.641688137717, zpe=0.33587176822026876)
 
@@ -800,3 +937,13 @@ def volume_calc(filename):
     volume = np.dot(lattice_vectors[0],np.cross(lattice_vectors[1],lattice_vectors[2]))
 
     return abs(volume)
+
+#####define chemical potential in solution, activity coefficient
+'''
+6. The chemical potential always refers to components in a (solid, liquid or gaseous) solution, or to the one component in a pure phase. When considering say, dissolved alcohol in aqueous solution, the chemical potential of alcohol= µ(alcohol in solution) = µ(pure alcohol) + RT ln (a), where a = activity of the component (alcohol in this case) in the solution, and where either a = jm or a = j X (where j = activity coefficient, m = molality or molarity, and X = mole fraction). In geology, we might be concerned with the chemical potential of enstatite component in orthorhombic pyroxene, which, skipping some complexities, may be represented by:
+
+ 
+
+µ(MgSiO3) = µ(pure MgSiO3) + Rt ln X(MgSiO3), when the solution is ideal (activity coefficent ~ 1)
+
+'''

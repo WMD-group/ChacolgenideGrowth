@@ -1,75 +1,69 @@
 
-Chalcogenide growth modelling
-============================
+ChalcogenideGrowth thermodynamic modelling package
+====================================================
 
 ![Reactions](https://user-images.githubusercontent.com/25340554/228510930-f5993dfe-71e3-4050-809c-72b789a363aa.png)
 
-
-
-BaZrS3 thermodynamic modelling
-============================
-
-
-
-
-CZTS thermodynamic modelling
-============================
-
-[![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.57130.svg)](http://dx.doi.org/10.5281/zenodo.57130)
-
-Research data and calculations for ab initio thermodynamic modelling of
-the formation and decomposition of Cu<sub>2</sub>ZnSnS<sub>4</sub> (CZTS).
-
-This repository acts as supplementary information for a [2014 publication in *J. Mater. Chem. A*](http://dx.doi.org/10.1039/C4TA00892H), and is also an active project currently hosted at
-[http://github.com/WMD-Group/CZTS-model](http://github.com/WMD-Group/CZTS-model).
-The [releases](https://github.com/WMD-group/CZTS-model/releases) correspond to key publication points in the project:
-
-* [report-confirmation](https://github.com/WMD-group/CZTS-model/releases/tag/report-confirmation) [ajjackson](https://github.com/ajjackson)'s 1st year PhD confirmation report. [Not public]
-* [v1.0](https://github.com/WMD-group/CZTS-model/releases/tag/v1.0) Initial submission to *J. Mater. Chem. A*.
-* [v1.2a](https://github.com/WMD-group/CZTS-model/releases/tag/v1.2a) Supporting data for publication in *J. Mater. Chem. A.*. Includes minor bug fixes and data for comparison with [another study](https://dx.doi.org/10.1021/cm202379s), with permission from Jonathan Scragg.
-* [thesis-submission](https://github.com/WMD-group/CZTS-model/releases/tag/thesis-submission) Supporting data for ajjackson PhD thesis submission. [Initial submission is not public]
-
-
-
-(c) Adam Jackson 2016
-This code is made available under the GNU General Public Licence (GPL) v3.
-See the LICENSE file for the full text.
-
 Contents
 --------
+1. Determining the T(temperature) and P(pressure) conditions for growing chalcogenides;
+2. Determining Defect concentration
 
-* **materials.py** Core python library containing:
-  * Classes for material results, implementing key thermodynamic functions
-  * Objects containing results data for materials by name:
-    * DFT total energies
-    * Basic structure parameters
-    * Filenames of supporting data
-    * Methods for calculation of T- and P-dependent thermodynamic potentials
+Prerequist
+--------
+1. DFT calculations
+2. Phonopy calculations
 
-* **interpolate_thermal_property.py** Interpolation functions for tabulated data, using Scipy.
+Procedures
+--------
+* Growth reaction path
 
-* **nist_janaf/** Folder containing thermodynamic data for S2 and S8 gases from the literature.
+  Reaction 1:
 
-* **phonopy_output/** Numerically tabulated thermodynamic properties from [Phonopy](http://phonopy.sourceforge.net) runs.
+  BaS + ZnS --> BaZrS3 (solid state)
 
-* **plots/** Plotting programs, primarily for computing free energy surfaces.
-  The main plotting routine is contained in **plots/DG_CZTS_S8.py** and this function is imported
-  as needed by other free energy surface plotting programs.
-  Due to the structure of Python libraries, these functions need to be called from the parent folder, e.g.
-  `python plots/DG_CZTS_S2.py`.
+  Reaction 2:
 
-* **report_H_standard.py** Calculate and print key formation energies.
+  Ba + Zr + S --> BaZrS3 (S flux)
 
-* **sanity\_checks** contains several functions which compare thermodynamic properties over
-  a temperature range, rescaled for direct comparison. This is intended to highlight basic
-  issues in calculations. The files need to be run from the parent directory, i.e.:
+* Creating materials instances for each reactants and products in the reaction (Reaction 1 as an example). 
+    ```python
 
-      python sanity_checks/mu_compare.py
+    BZS =solid(
+        name='BaZrS3',
+        pbesol_energy_eV= -1079.5348,
+        fu_cell=32,
+        volume=3901.173919,
+        phonons='phonopy_output/BaS_n.dat',
+        N=5
+    )
 
-* **jscragg_2011.csv** Data file containing kinetic model stability boundary
-  data from [Scragg et al. (2011)](http://dx.doi.org/10.1021/cm202379s). This
-  data is used in **plots/DG_CZTS_SnS_Scragg.py** to reproduce Fig. 7 of [Jackson and Walsh (2014)](http://dx.doi.org/10.1039/c4ta00892h).
+    BaS =solid(
+        name='BaS',
+        pbesol_energy_eV= -.42876562E+02,
+        fu_cell=4,
+        volume=257.548609,
+        phonons='phonopy_output/BaS_n.dat',
+        N=2
+    )
 
+    ZrS =solid(
+        name='ZrS2',
+        pbesol_energy_eV= -.22548979E+02,
+        fu_cell=1,
+        volume=67.175661,
+        phonons='phonopy_output/ZrS_n.dat',
+        N=3
+    )
+    ```
+
+
+
+
+
+
+Examples
+============================
 Example
 -------
 
@@ -103,3 +97,40 @@ with open('mu_data_Jmol.csv', 'wb') as f:
     writer.writerow(titles)
     writer.writerows(data)
 ```
+
+
+Publications
+============================
+
+BaZrS3 growth
+--------
+
+
+2D Transition Metal Dichalcogenide growth
+--------
+
+
+
+CZTS thermodynamic modelling
+--------
+
+[![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.57130.svg)](http://dx.doi.org/10.5281/zenodo.57130)
+
+Research data and calculations for ab initio thermodynamic modelling of
+the formation and decomposition of Cu<sub>2</sub>ZnSnS<sub>4</sub> (CZTS).
+
+This repository acts as supplementary information for a [2014 publication in *J. Mater. Chem. A*](http://dx.doi.org/10.1039/C4TA00892H), and is also an active project currently hosted at
+[http://github.com/WMD-Group/CZTS-model](http://github.com/WMD-Group/CZTS-model).
+The [releases](https://github.com/WMD-group/CZTS-model/releases) correspond to key publication points in the project:
+
+* [report-confirmation](https://github.com/WMD-group/CZTS-model/releases/tag/report-confirmation) [ajjackson](https://github.com/ajjackson)'s 1st year PhD confirmation report. [Not public]
+* [v1.0](https://github.com/WMD-group/CZTS-model/releases/tag/v1.0) Initial submission to *J. Mater. Chem. A*.
+* [v1.2a](https://github.com/WMD-group/CZTS-model/releases/tag/v1.2a) Supporting data for publication in *J. Mater. Chem. A.*. Includes minor bug fixes and data for comparison with [another study](https://dx.doi.org/10.1021/cm202379s), with permission from Jonathan Scragg.
+* [thesis-submission](https://github.com/WMD-group/CZTS-model/releases/tag/thesis-submission) Supporting data for ajjackson PhD thesis submission. [Initial submission is not public]
+
+
+
+(c) Adam Jackson 2016
+This code is made available under the GNU General Public Licence (GPL) v3.
+See the LICENSE file for the full text.
+
