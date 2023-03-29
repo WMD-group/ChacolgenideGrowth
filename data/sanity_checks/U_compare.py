@@ -1,7 +1,7 @@
 import numpy as np
-from materials import Cu, Zn, Sn, alpha_S, CZTS_kesterite, CZTS_stannite
-from materials import Cu2S_low, ZnS_zincblende, ZnS_wurtzite, SnS2, SnS_pcma
-from materials import Cu2SnS3_mo1, Cu2SnS3_mo2
+from scripts.materials import Cu, Zn, Sn, alpha_S, CZTS_kesterite, CZTS_stannite
+from scripts.materials import Cu2S_low, ZnS_zincblende, ZnS_wurtzite, SnS2, SnS_pcma
+from scripts.materials import Cu2SnS3_mo1, Cu2SnS3_mo2
 from matplotlib import pyplot as plt
 
 
