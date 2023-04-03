@@ -1,0 +1,27 @@
+Metadata-Version: 2.1
+Name: ChalcoGrowth
+Version: 1.0.0
+Summary: Chalcogenide growth thermodynamics
+Home-page: UNKNOWN
+Author: Zhenzhu Li
+Author-email: lizhenzhupearl@gmail.com
+License: MIT
+Download-URL: https://github.com/WMD-group/ChalcogenideGrowth.git
+Keywords: materials,science,thermodynamics
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Science/Research
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Classifier: Topic :: Scientific/Engineering :: Information Analysis
+Classifier: Topic :: Scientific/Engineering :: Physics
+Classifier: Topic :: Scientific/Engineering :: Chemistry
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+License-File: LICENSE
+
+UNKNOWN
+

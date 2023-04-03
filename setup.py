@@ -4,13 +4,11 @@ DESCRIPTION = 'A chalcogenide package'
 LONG_DESCRIPTION = 'A package that makes it easy to convert values between several units of measurement'
 
 setup(
-    name="ChacolgenideGrowthh",
+    name="ChacolgenideGrowth",
     version=version,
     install_requires=[
-        "tensorflow",
         "numpy",
         "monty",
-        "sympy",
     ],
     description="Chalcogenide growth thermodynamics",
     author="Zhenzhu Li",

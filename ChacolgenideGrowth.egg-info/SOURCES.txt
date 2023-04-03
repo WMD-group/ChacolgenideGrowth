@@ -1,0 +1,15 @@
+LICENSE
+README.md
+setup.py
+ChacolgenideGrowth.egg-info/PKG-INFO
+ChacolgenideGrowth.egg-info/SOURCES.txt
+ChacolgenideGrowth.egg-info/dependency_links.txt
+ChacolgenideGrowth.egg-info/requires.txt
+ChacolgenideGrowth.egg-info/top_level.txt
+scripts/__init__.py
+scripts/defect_concentration.py
+scripts/interpolate_thermal_property.py
+scripts/materials.py
+scripts/plot_potential.py
+scripts/report_H_standard.py
+scripts/utils.py
