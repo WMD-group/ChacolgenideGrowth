@@ -1,5 +1,5 @@
 def main():
-    from materials
+    from materials import material, solid
     import numpy as np
 
     from plot_potential import plot_potential

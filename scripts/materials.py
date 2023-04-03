@@ -18,7 +18,6 @@
 import numpy as np
 from scipy import constants
 from scripts.interpolate_thermal_property import get_potential_aims, get_potential_nist_table, get_potential_sulfur_table
-import re
 
 import os  # get correct path for datafiles when called from another directory
 materials_directory = os.path.dirname(__file__)
