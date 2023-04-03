@@ -14,6 +14,12 @@ Prerequist
 1. DFT calculations
 2. Phonopy calculations
 
+Installation
+--------
+git clone https://github.com/WMD-group/ChalcogenideGrowth.git
+cd ChalcogenideGrowth
+python setup install
+
 Procedures
 --------
 * Growth reaction path
